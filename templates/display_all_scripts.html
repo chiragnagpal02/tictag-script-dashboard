@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Tictag Scripts</title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+   <style>
+    #navbar {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 200px;
+   height: 100%;
+   border-radius: 2px;
+   box-shadow:  4px 4px 8px #f5be70,
+          -10px -10px 15px #f5be70;
+   background-color: orange;
+   padding: 20px;
+}
+
+#logo {
+   height: 100px;
+   width: 100px;
+   margin: 0;
+}
+
+.container {
+  margin-left: 220px; /* add margin to the left to leave space for the navbar */
+  margin-right: 10px; /* add margin to the right */
+}
+
+/* add style for the navbar items */
+#navbar-items {
+   margin-top: 20px;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+#navbar-items a {
+   color: white;
+   font-size: 20px;
+   font-weight: bold;
+   text-decoration: none;
+   margin-top: 20px;
+}
+
+#navbar-items a:hover {
+   color: black;
+}
+
+/* add style for the Google ID picture */
+#google-id-picture {
+   display: block;
+   margin: 20px auto 0; /* center horizontally and add margin to the top */
+   width: 50px;
+   height: 50px;
+}
+
+/* add style for the logout button */
+#logout-btn {
+    /* width: 100%; */
+    margin-top: auto; /* push the button to the bottom of the container */
+}
+
+#redirect-link {
+    text-decoration: none;
+    font-size: small;
+    font-family: 'Times New Roman', Times, serif;
+    color: black;
+}
+</style>
+</head>
+<body>
+    <div id="navbar">
+        <div class="container-fluid">
+           <div class="row justify-content-center align-items-center">
+              <img src="../static/TicTag-Logo.png" alt="Tictag-Logo" id="logo">
+              <p1>Tictag Scripts</p1>
+           </div>
+           <!-- add navbar items -->
+           <div id="navbar-items">
+              <img src="{{ picture }}" alt="Google ID Picture" id="google-id-picture">
+              <!-- <a href="http://127.0.0.1:5450/display_all_scripts" id="redirect-link">Check all scripts</a>
+              <a href="http://127.0.0.1:5450/request_for_a_script" id="redirect-link">Request for a script</a>
+              <a href="http://127.0.0.1:5450/display_all_requests" id="redirect-link">Check all existing requests</a> -->
+              <button type="button" id="check-scripts-btn" class="btn btn-light mt-3">Check all scripts</button>
+              <button type="button" id="request-scripts-btn" class="btn btn-light mt-3">Request for a script</button>
+              <button type="button" id="check-requests-btn" class="btn btn-light mt-3">Check all existing requests</button>
+              <button type="button" id="homepage-btn" class="btn btn-light mt-3">Homepage</button>
+              <button type="button" id="logout-btn" class="btn btn-light mt-3">Logout</button>
+           </div>
+        </div>
+      </div>
+    
+      <!-- class="btn btn-light mt-3" -->
+        <script>
+    
+            document.getElementById("logout-btn").addEventListener("click", function() {
+                window.location.href = "/logout";
+            });
+            document.getElementById("check-scripts-btn").addEventListener("click", function() {
+                window.location.href = "/display_all_scripts";
+            });
+            document.getElementById("request-scripts-btn").addEventListener("click", function() {
+                window.location.href = "/request_for_a_script";
+            });
+            document.getElementById("check-requests-btn").addEventListener("click", function() {
+                window.location.href = "/display_all_requests";
+            });
+            document.getElementById("homepage-btn").addEventListener("click", function() {
+                window.location.href = "/homepage";
+            });
+        </script>
+
+   <div class="container">
+      <h1>Get All Scripts</h1>
+      <div id="scripts"></div>
+
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+      <script>
+         axios.get('http://127.0.0.1:5002/scripts/get_all_scripts')
+            .then(function (response) {
+               console.log(response.data);
+               var scripts = response.data.data;
+               var html = '';
+               scripts.forEach(function (script) {
+                  html += '<div class="card mb-3">';
+                  html += '<div class="card-body">';
+                  html += '<h3 class="card-title">' + script.script_name + '</h3>';
+                  html += '<p class="card-text"><strong>Description:</strong> ' + script.script_description + '</p>';
+                  html += '<p class="card-text"><strong>Project:</strong> ' + script.project + '</p>';
+                  html += '<p class="card-text"><strong>Created By:</strong> ' + script.created_by + '</p>';
+                  html += '<p class="card-text"><strong>Script Link:</strong> <a href="' + script.script_link + '">' + script.script_link + '</a></p>';
+                  html += '</div>';
+                  html += '</div>';
+               });
+               document.getElementById('scripts').innerHTML = html;
+            })
+            .catch(function (error) {
+               console.log(error);
+            });
+      </script>
+   </div>
+</body>
+</html>

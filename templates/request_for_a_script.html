@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Script Request Form</title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+   <style>
+    #navbar {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 200px;
+   height: 100%;
+   border-radius: 2px;
+   box-shadow:  4px 4px 8px #f5be70,
+          -10px -10px 15px #f5be70;
+   background-color: orange;
+   padding: 20px;
+}
+
+#logo {
+   height: 100px;
+   width: 100px;
+   margin: 0;
+}
+
+.container {
+  margin-left: 220px; /* add margin to the left to leave space for the navbar */
+  margin-right: 10px; /* add margin to the right */
+}
+
+/* add style for the navbar items */
+#navbar-items {
+   margin-top: 20px;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+#navbar-items a {
+   color: white;
+   font-size: 20px;
+   font-weight: bold;
+   text-decoration: none;
+   margin-top: 20px;
+}
+
+#navbar-items a:hover {
+   color: black;
+}
+
+/* add style for the Google ID picture */
+#google-id-picture {
+   display: block;
+   margin: 20px auto 0; /* center horizontally and add margin to the top */
+   width: 50px;
+   height: 50px;
+}
+
+/* add style for the logout button */
+#logout-btn {
+    /* width: 100%; */
+    margin-top: auto; /* push the button to the bottom of the container */
+}
+
+#redirect-link {
+    text-decoration: none;
+    font-size: small;
+    font-family: 'Times New Roman', Times, serif;
+    color: black;
+}
+</style>
+   </style>
+</head>
+<body>
+    <div id="navbar">
+        <div class="container-fluid">
+           <div class="row justify-content-center align-items-center">
+              <img src="../static/TicTag-Logo.png" alt="Tictag-Logo" id="logo">
+              <p1>Tictag Scripts</p1>
+           </div>
+           <!-- add navbar items -->
+           <div id="navbar-items">
+              <img src="{{ picture }}" alt="Google ID Picture" id="google-id-picture">
+              <!-- <a href="http://127.0.0.1:5450/display_all_scripts" id="redirect-link">Check all scripts</a>
+              <a href="http://127.0.0.1:5450/request_for_a_script" id="redirect-link">Request for a script</a>
+              <a href="http://127.0.0.1:5450/display_all_requests" id="redirect-link">Check all existing requests</a> -->
+              <button type="button" id="check-scripts-btn" class="btn btn-light mt-3">Check all scripts</button>
+              <button type="button" id="request-scripts-btn" class="btn btn-light mt-3">Request for a script</button>
+              <button type="button" id="check-requests-btn" class="btn btn-light mt-3">Check all existing requests</button>
+              <button type="button" id="homepage-btn" class="btn btn-light mt-3">Homepage</button>
+              <button type="button" id="logout-btn" class="btn btn-light mt-3">Logout</button>
+           </div>
+        </div>
+      </div>
+    
+      <!-- class="btn btn-light mt-3" -->
+        <script>
+    
+            document.getElementById("logout-btn").addEventListener("click", function() {
+                window.location.href = "/logout";
+            });
+            document.getElementById("check-scripts-btn").addEventListener("click", function() {
+                window.location.href = "/display_all_scripts";
+            });
+            document.getElementById("request-scripts-btn").addEventListener("click", function() {
+                window.location.href = "/request_for_a_script";
+            });
+            document.getElementById("check-requests-btn").addEventListener("click", function() {
+                window.location.href = "/display_all_requests";
+            });
+            document.getElementById("homepage-btn").addEventListener("click", function() {
+                window.location.href = "/homepage";
+            });
+        </script>
+    <div class="container">
+      <h1>Create Script Request</h1>
+      <form id="script-request-form">
+        <!-- <div class="form-group">
+          <label for="employee-name">Employee Name:</label>
+          <input type="text" class="form-control" id="employee-name" name="employee_name" required>
+        </div> -->
+        <div class="form-group">
+          <label for="employee-id">Employee ID:</label>
+          <input type="number" class="form-control" id="employee-id" name="employee_id" required>
+        </div>
+        <div class="form-group">
+          <label for="project">Project:</label>
+          <input type="text" class="form-control" id="project" name="project" required>
+        </div>
+        <div class="form-group">
+          <label for="request-description">Request Description:</label>
+          <textarea class="form-control" id="request-description" name="request_description" rows="5" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="impact">Impact:</label>
+          <select class="form-control" id="impact" name="impact" required>
+            <option value="" disabled selected>Select Impact</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="urgency">Urgency:</label>
+          <select class="form-control" id="urgency" name="urgency" required>
+            <option value="" disabled selected>Select Urgency</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      const form = document.getElementById('script-request-form');
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const data = {};
+        formData.forEach((value, key) => data[key] = value);
+        axios.post('http://127.0.0.1:5000/script_requests/create_script_request', data)
+          .then(function (response) {
+            console.log(response.data);
+            alert(response.data.message);
+            form.reset();
+          })
+          .catch(function (error) {
+            console.log(error);
+            alert('Error submitting form');
+          });
+      });
+    </script>
+  </body>
+</html>
